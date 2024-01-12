@@ -14,6 +14,7 @@ function bfs(board, start) {
         
         if(board[x][y] === 'G') {
             answer.push(cnt);
+            break;
         } else {
             for(const [dx, dy] of dirs) {
                 let nx = x + dx;
@@ -39,11 +40,11 @@ function bfs(board, start) {
 }
 
 function solution(board) {
-    outer:for(let i = 0; i < board.length; i++) {
+    for(let i = 0; i < board.length; i++) {
         for(let j = 0; j < board[0].length; j++) {
             if(board[i][j] === 'R') {
                 const answer = bfs(board, { x : i, y : j, cnt : 0 });
-                return answer.length === 0 ? - 1 : Math.min(...answer);
+                return answer.length === 0 ? -1 : answer[0];
             }
         }
     }
