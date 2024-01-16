@@ -18,7 +18,7 @@ function calculator(arr) {
     for(let i = 0; i < idx; i++) {
         min = Math.min(min, sum[i]);
     }
-        
+            
     if(min < 0) {
         return max - min;
     } else {
@@ -34,19 +34,13 @@ function solution(sequence) {
     for(let i = 0; i < sequence.length; i++) {
         if(i % 2 === 0) {
             arr1.push(sequence[i]);
+            arr2.push(sequence[i] * -1);
         } else {
             arr1.push(sequence[i] * -1);
-        }
-    }
-    
-    for(let i = 0; i < sequence.length; i++) {
-        if(i % 2 === 1) {
             arr2.push(sequence[i]);
-        } else {
-            arr2.push(sequence[i] * -1);
         }
     }
-    
+
     answer.push(calculator(arr1));
     answer.push(calculator(arr2));
     
