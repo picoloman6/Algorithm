@@ -1,68 +1,63 @@
-// 완전 탐색은 절대 아님 => 진짜? => 아니 어차피 쏘고 안쏘고라 2의 11승
-// 화살 쏘는 규칙이 먼저 필요함
-function caculator(info, result, diff, answer) {
-    let ryan = 0;
-    let apeach = 0;
+function calculator(info, ryan) {
+    let point = 0;
+    
     for(let i = 0; i < 11; i++) {
-        if(info[i] > 0 || result[i] > 0) {
-            if(info[i] >= result[i]) {
-                apeach += (10 - i);
-            } else {
-                ryan += (10 - i);
-            }
+        if(info[i] < ryan[i]) {
+            point += (10 - i);
+        } else if(info[i] > 0) {
+            point -= (10 - i);
         }
     }
     
-    if(ryan > apeach && ryan - apeach > diff[0]) {
-        diff[0] = ryan - apeach;
-        for(let i = 0; i < info.length; i++) {
-            answer[i] = result[i];
-        }
-    } else if(ryan > apeach && ryan - apeach === diff[0]) {
-        for(let i = 10; i > - 1; i--) {
-            if(result[i] > 0 || answer[i] > 0) {
-                if(result[i] > answer[i]) {
-                    for(let i = 0; i < info.length; i++) {
-                        answer[i] = result[i];
+    return point;
+}
+
+function dfs(info, n, L, ryan, max, answer) {
+    if(L === 11) {
+        ryan[10] += n;
+        const point = calculator(info, ryan);
+                
+        if(point > max[0]) {
+            max[0] = point;
+            for(let i = 0; i < 11; i++) {
+                answer[i] = ryan[i];
+            }
+        } else if(point === max[0]) {
+            for(let i = 10; i >= 0; i--) {
+                if(answer[i] < ryan[i]) {
+                    for(let j = 0; j < 11; j++) {
+                        answer[j] = ryan[j];
                     }
                     break;
-                } else if(result[i] <= answer[i]){
+                } else if(answer[i] > ryan[i]) {
                     break;
                 }
             }
         }
-    }
-}
-
-// function findMin(answer, result) {
-//     let ryan = 10;
-//     let apeach = 
-// }
-
-
-function dfs(n, info, diff, L, result, answer) {
-    if(n === 0 || L >= 11 ) {
-        if(n === 0) {
-            caculator(info, result, diff, answer);
-        }
+        
+        ryan[10] -= n;
         return;
     } else {
-        const arrow = n - info[L] + 1 > 0 ? info[L] + 1 : n;
-        if(n > 0) {
-            result[L] = arrow;
-            n -= arrow;
-            dfs(n, info, diff, L + 1, result, answer);
-            result[L] = 0;
-            n += arrow;
-            dfs(n, info, diff, L + 1, result, answer);
+        dfs(info, n, L + 1, ryan, max, answer);
+        
+        const target = info[L] + 1;
+        if(target <= n) {
+            ryan[L] += target;
+            dfs(info, n - target, L + 1, ryan, max, answer);    
+            ryan[L] -= target;
         }
     }
 }
 
 function solution(n, info) {
-    const result = Array.from({length : 11}, () => 0);
-    const diff = [0];
-    const answer = [-1];
-    dfs(n, info, diff, 0, result, answer);
-    return answer;
+    const max = [0]
+    const answer = Array.from({ length : 11 }, () => 0);
+    
+    dfs(info, n, 0, Array.from({ length : 11 }, () => 0), max, answer);
+            
+    if(max[0] === 0) {
+        return [-1];
+    } else {
+        return answer;
+    }
 }
