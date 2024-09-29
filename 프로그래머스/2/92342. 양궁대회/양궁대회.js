@@ -13,7 +13,7 @@ function calculator(info, ryan) {
 }
 
 function dfs(info, n, L, ryan, max, answer) {
-    if(L === 11) {
+    if(L === 11 || n === 0) {
         ryan[10] += n;
         const point = calculator(info, ryan);
                 
@@ -38,7 +38,6 @@ function dfs(info, n, L, ryan, max, answer) {
         ryan[10] -= n;
         return;
     } else {
-        dfs(info, n, L + 1, ryan, max, answer);
         
         const target = info[L] + 1;
         if(target <= n) {
@@ -46,6 +45,9 @@ function dfs(info, n, L, ryan, max, answer) {
             dfs(info, n - target, L + 1, ryan, max, answer);    
             ryan[L] -= target;
         }
+        
+                dfs(info, n, L + 1, ryan, max, answer);
+
     }
 }
 
